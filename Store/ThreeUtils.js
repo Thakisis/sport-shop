@@ -26,7 +26,7 @@ export async function createMaterial(shaderInfo, itemList, setShader) {
     const zonasUniforms = Zonas.reduce((acum, { un, defaultValue }) => ({ ...acum, [un]: { value: new THREE.Color(defaultValue) } }), {})
     const newUniforms = { ...shaderInfo.uniforms, ...texturesUniforms, ...zonasUniforms }
     const { frHeader, frBody } = shaderInfo
-    const material = new THREE.MeshPhysicalMaterial()
+    const material = new THREE.MeshPhysicalMaterial({ side: THREE.DoubleSide })
     const uniforms2 = {
         Zones1: { value: textures[0].texture },
         background: { value: new THREE.Color(0xff00ff) },
