@@ -8,6 +8,19 @@ export function ZonesArea(props) {
     return (
         <div>
             {UIZones}
+            <div>
+                <button
+                    className="bg-white hover:bg-slate-400  text-black font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                        const link = document.createElement('a')
+                        link.setAttribute('download', 'canvas.png')
+                        link.setAttribute('href', document.querySelector('canvas').toDataURL('image/png').replace('image/png', 'image/octet-stream'))
+                        link.click()
+                    }}>
+                    DOWNLOAD
+
+                </button>
+            </div>
         </div>
     )
 }
