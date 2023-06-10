@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useStore } from "@/Store"
 export function SvgNumber(props) {
-    const { name = "pru", number = "0" } = useStore(state => state.numberData)
+    const { name, number } = useStore(state => state.numberData)
     const { setTextureNumber } = useStore(state => state.Actions)
     useEffect(() => {
 
@@ -26,21 +26,21 @@ export function SvgNumber(props) {
                 <text fontSize={230} style={{ fontFamily: "Arial, Helvetica, sans-serif", fontWeight: "bold" }} >
                     <textPath href="#MyPath" startOffset={`${(12 - name.length) / 2 * 117}`}>{name.toUpperCase()}</textPath>
                 </text>
-                {number.length > 1 ?
+                {number?.length === 2 &&
                     <>
                         <text style={{ fontFamily: "Arial, Helvetica, sans-serif", letterSpacing: "1rem" }} x="100" y="1800" fontSize={1600}>{[...number][0]}</text>
                         <text style={{ fontFamily: "Arial, Helvetica, sans-serif", letterSpacing: "1rem" }} x="1000" y="1800" fontSize={1600}>{[...number][1]}</text>
                     </>
-                    :
-                    <>
-
-                        <text style={{ fontFamily: "Arial, Helvetica, sans-serif", letterSpacing: "1rem" }} x="600" y="1800" fontSize={1600}>{[...number][0]}</text>
-
-
-                    </>
                 }
+                {number?.length === 1 &&
+
+                    < text style={{ fontFamily: "Arial, Helvetica, sans-serif", letterSpacing: "1rem" }} x="600" y="1800" fontSize={1600}>{[...number][0]}</text>
+
+                }
+
+
             </svg>
-        </div>
+        </div >
     )
 }
 

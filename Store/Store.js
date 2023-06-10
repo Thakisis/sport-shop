@@ -41,8 +41,9 @@ export const useStore = create((set, get) => ({
             updateNumber(shader)
         },
         setNumber(newNumberData) {
-            console.log(newNumberData)
-            set((numberData) => ({ numberData: { ...numberData, ...newNumberData } }))
+
+            set(({ numberData }) => ({ numberData: { ...numberData, ...newNumberData } }))
+
         }
 
     }
