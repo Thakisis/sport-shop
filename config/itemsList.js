@@ -7,8 +7,8 @@ export const itemsList = [{
     Zonas: [
         { nombre: "Zona Izq", un: "background", defaultValue: "#ffffff" },
         { nombre: "Zona Derecha", un: "ColorA", defaultValue: "#FF0000" },
-        { nombre: "Lateral Derecho", un: "ColorB", defaultValue: "#00FF00" },
-        { nombre: "Sesgo lateral", un: "ColorC", defaultValue: "#0000FF" }
+        { nombre: "Lateral Derecho", un: "ColorB", defaultValue: "#0000FF" },
+        { nombre: "Sesgo lateral", un: "ColorC", defaultValue: "#00FF00" }
 
     ]
 }];
