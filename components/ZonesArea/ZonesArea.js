@@ -6,7 +6,7 @@ export function ZonesArea(props) {
     const { Zonas } = useStore((state) => state.itemList)
     const UIZones = Zonas.map((zona) => <Zone key={zona.un} {...zona} />)
     return (
-        <div>
+        <div className="flex flex-col justify-between h-full">
             {UIZones}
             <div>
                 <button
