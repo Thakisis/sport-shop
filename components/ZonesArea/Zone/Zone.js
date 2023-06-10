@@ -26,7 +26,7 @@ export function Zone({ nombre, defaultValue, un }) {
                     <Popover.Target >
 
                         <div className="block relative w-36 h-36" onClick={() => setOpened(true)}>
-                            <Image src={`/zones/${name}/fondo.webp`} width={144} height={144} className='absolute top-0 left-0 block w-36 h-36' ></Image>
+                            <Image src={`/zones/${name}/fondo.webp`} width={144} height={144} className='absolute top-0 left-0 block w-36 h-36' alt="background"></Image>
                             <div className='block absolute top-0 left-0 w-36 h-36 layerColor '
                                 style={{
                                     background: color.hex,
@@ -42,7 +42,7 @@ export function Zone({ nombre, defaultValue, un }) {
 
                             >
                             </div>
-                            <Image className="imageZone"src={`/zones/${name}/${un}.webp`} width={144} height={144}  ></Image>
+                            <Image className="imageZone" src={`/zones/${name}/${un}.webp`} width={144} height={144} alt={`${nombre}`}></Image>
 
                         </div>
 

@@ -17,6 +17,7 @@ specifiers:
   react-color-palette: ^6.2.0
   react-colorful: ^5.6.1
   react-dom: 18.2.0
+  react-svg-to-image: ^3.0.0
   simple-zustand-devtools: ^1.1.0
   tailwindcss: 3.3.2
   three: ^0.153.0
@@ -39,6 +40,7 @@ dependencies:
   react-color-palette: 6.2.0_react@18.2.0
   react-colorful: 5.6.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
+  react-svg-to-image: 3.0.0
   simple-zustand-devtools: 1.1.0_biqbaboplfbrettd7655fr4n2y
   tailwindcss: 3.3.2
   three: 0.153.0
@@ -3114,6 +3116,10 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: 2.5.3
+    dev: false
+
+  /react-svg-to-image/3.0.0:
+    resolution: {integrity: sha512-6qV45Sx+2H4GSXlkoMc4msOhwXCLvTgkei8TybzIthBAVVvUrL4E2VuY1T9rduInnXajqkY+X5XKGHYteUlLZQ==}
     dev: false
 
   /react-textarea-autosize/8.3.4_react@18.2.0:

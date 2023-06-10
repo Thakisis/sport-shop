@@ -1,7 +1,8 @@
 import create from 'zustand'
 import { mountStoreDevtool } from 'simple-zustand-devtools'
 import { shaderFragments, itemsList } from '@/config'
-import { updateColor, createMaterial } from './ThreeUtils'
+import { updateColor, createMaterial, updateNumber } from './ThreeUtils'
+
 export const useStore = create((set, get) => ({
     created: false,
     activeRoute: undefined,
@@ -13,6 +14,7 @@ export const useStore = create((set, get) => ({
     itemList: itemsList[0],
     material: undefined,
     textures: [],
+    numberData: { name: "text", Number: 0 },
     Actions: {
 
         async setMaterial() {
@@ -31,7 +33,18 @@ export const useStore = create((set, get) => ({
         },
         setShader(shader) {
             set({ shader: shader })
+        },
+        setTextureNumber() {
+            const shader = get().shader
+            if (!shader)
+                return
+            updateNumber(shader)
+        },
+        setNumber(newNumberData) {
+            console.log(newNumberData)
+            set((numberData) => ({ numberData: { ...numberData, ...newNumberData } }))
         }
+
     }
 
 }))

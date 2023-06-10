@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 const loader = new THREE.TextureLoader()
-
+import toImg from 'react-svg-to-image'
+import { svgToPng } from './svgToPng'
 
 
 
@@ -51,9 +52,19 @@ export async function createMaterial(shaderInfo, itemList, setShader) {
 export function updateColor(material, shader, uniform, color) {
 
     shader.uniforms[uniform].value = new THREE.Color(color)
+}
+
+export async function updateNumber(shader) {
+
+    const svgEl = document.getElementById("svgNumber")
+    const svgTexture = await svgToPng({ domSvg: svgEl, width: 2048, quality: 1 })
+
+
+    //let mytexture = new THREE.CanvasTexture(svgEl)
+    //console.log(mytexture)
+    shader.uniforms["Number"].value = svgTexture
+
 
 
 }
-
-
 
