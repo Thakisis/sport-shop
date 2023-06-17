@@ -1,8 +1,36 @@
-export const shaderFragments = [
-    {
+export const shaderFragments = {
+    TshirtA_solido: {
+        uniforms:
+        {
+
+            Number: { value: null },
+            background: { value: 0x000000 },
+
+        }
+        ,
+        frHeader: `
+                
+                uniform sampler2D Number; 
+                uniform vec3 background; 
+            
+        `,
+        frBody: `
+            vec2 uvs = vUv;
+            vec2 uvIm2=vUv*2.3;
+            uvIm2.y-=1.1;
+            uvIm2.x-=1.22;
+            vec4 numberColor= texture2D( Number, uvIm2 );
+            vec3 finalColor=mix(background,numberColor.rgb,numberColor.a);
+            diffuseColor= vec4(finalColor,1.);
+        `
+
+
+    },
+    TshirtA_diagonal: {
         uniforms:
         {
             Zones1: { value: null },
+            Number: { value: null },
             background: { value: 0x000000 },
             ColorA: { value: 0x000000 },
             ColorB: { value: 0x000000 },
@@ -38,4 +66,4 @@ export const shaderFragments = [
     }
 
 
-]
+}

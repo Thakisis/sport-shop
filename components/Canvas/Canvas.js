@@ -1,18 +1,15 @@
 "use client"
-import { useEffect } from 'react'
-import { Environment, Center, CameraControls } from "@react-three/drei"
+import { Environment, Center, CameraControls, Stage } from "@react-three/drei"
 import { Canvas } from "@react-three/fiber"
-import { Tshirt } from "@/components/Models"
+import * as Models from "@/components/Models"
 import { useStore } from "@/Store"
+import { SetWebgl } from './SetWebgl'
 export function Canvasr3f({ children }) {
 
-    const shader = useStore((state) => state.Shaders)
-    const { setMaterial } = useStore((state) => state.Actions)
-    useEffect(() => {
-        //const material = createMaterial(shader)
-        const material = "aaa"
-        setMaterial(material)
-    }, [])
+
+
+    const { mesh, material } = useStore((state) => state.threeSelected)
+    const Model = mesh ? <mesh geometry={mesh.geometry} material={material}></mesh> : <group></group>
     return (
         <Canvas shadows
             camera={{ position: [0, 0, 2.5], fov: 25 }}
@@ -20,14 +17,22 @@ export function Canvasr3f({ children }) {
             eventPrefix="client"
             style={{ position: "fixed", width: "100vw", height: "100vh", top: 0, left: 0, }}
         >
-            <CameraControls
-                minPolarAngle={Math.PI / 2}
-                maxPolarAngle={Math.PI / 2}
-            />
+            <CameraControls></CameraControls>
+            <SetWebgl />
+            <Models.Logo />
             <Environment preset="city" />
-            <Center>
-                <Tshirt />
+            <Center shadows="accumulative" precise disableZ
+                onCentered={({ container, height }) => container.scale.setScalar(1)}
+            >
+
+                {Model}
             </Center>
+
+
+
+
+
+
 
         </Canvas>
     )

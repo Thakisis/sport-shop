@@ -8,7 +8,8 @@ import { useStore } from '@/Store'
 export function Tshirt(props) {
   const group = useRef()
   const { nodes, materials } = useGLTF('/models/TShirt.glb')
-  const material = useStore((state) => state.material)
+  const material = useStore((state) => state.materialSelected)
+
   return (
     <group ref={group} {...props} dispose={null}>
       <mesh geometry={nodes.Tshirt.geometry} material={material || materials.Shirt} position={[0.42, 0, 0]} />

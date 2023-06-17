@@ -1,17 +1,36 @@
-export const itemsList = [{
-    id: 0,
-    name: "Camiseta base",
+export const modelList = [{
+    idModel: "TshirtA",
+    name: "Camiseta A",
+    file: "TShirt.glb",
+    component: "Tshirt",
+    image: "TshirtA.webp",
+},
+{
+    idModel: "TshirtB",
+    name: "Camiseta B",
     file: "Tshirt.glb",
     component: "Tshirt",
-    mapFiles: [{ name: "Zones1", file: '/textures/Camiseta01_Z_1.webp' }, { name: "Number", file: '/textures/Number.webp' }],
-    Zonas: [
-        { nombre: "Zona Izq", un: "background", defaultValue: "#ffffff" },
-        { nombre: "Zona Derecha", un: "ColorA", defaultValue: "#FF0000" },
-        { nombre: "Lateral Derecho", un: "ColorB", defaultValue: "#0000FF" },
-        { nombre: "Sesgo lateral", un: "ColorC", defaultValue: "#00FF00" }
+    image: "TshirtB.webp"
+},
+{
+    idModel: "TshirtC",
+    name: "Camiseta C",
+    file: "Tshirt.glb",
+    component: "Tshirt",
+    image: "TshirtC.webp"
+}
+    ,
+{
+    idModel: "TshirtD",
+    name: "Camiseta D",
+    file: "Tshirt.glb",
+    component: "Tshirt",
+    image: "TshirtD.webp"
+}
+]
 
-    ]
-}];
+
+
 
 
 

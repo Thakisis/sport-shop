@@ -1,0 +1,11 @@
+.placeholder {
+  mask-image: url(/images/LogoBW.webp);
+  mask-size: cover;
+  mask-mode: luminance;
+
+  mask-repeat: no-repeat;
+}
+.imageModel {
+  filter: drop-shadow(0 20px 13px rgb(0 0 0));
+  cursor: pointer;
+}
