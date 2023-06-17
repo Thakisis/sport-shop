@@ -99,7 +99,7 @@ export function createMaterial(design, textures) {
         
     `
     const material = new CustomShaderMaterial({
-        baseMaterial: THREE.MeshBasicMaterial,
+        baseMaterial: THREE.MeshPhysicalMaterial,
         uniforms: newUniforms,
         vertexShader: `
         varying vec2 vUv;
