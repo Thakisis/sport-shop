@@ -1,7 +1,7 @@
 import { EditorUi } from './EditorUI'
 import { CanvasWrapper } from './CanvasWrapper'
 import { InitStore } from './InitStore'
-import { MainLoader } from './Mainloader'
+import { MainLoader } from './MainLoader'
 export function Editor(props) {
     return (
         <div>
