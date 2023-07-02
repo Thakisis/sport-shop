@@ -1,5 +1,5 @@
 import { PATTERN, COLOR, SHADER } from '@/config/Constants'
-import { designs as p } from './designs'
+import { Zones as p } from './Zones'
 
 export const patternsList =
 {
@@ -7,65 +7,112 @@ export const patternsList =
         base: {
             nombre: "Color Solido",
             image: "Solido.webp",
+            background: "#ff00ff",
+
             Design: {
-                main: {
-                    type: COLOR,
-                    values: 0X4060FF,
-                },
+
             }
         },
         design1: {
             nombre: "Diseño Diagonal",
             image: "Diagonal.webp",
+            background: "#ffffff",
             Design: {
+
                 main: {
 
-                    type: [PATTERN, PATTERN],
-                    values: ["Zona3", "Zona1"],
+                    type: PATTERN,
+                    noMasked: ["cuello"],
+                    masked: ["Color2", "Zona2", "Zona3"],
                     pattern: p.diagonal
                 },
-                Zona1: {
-                    type: [COLOR, PATTERN],
-                    values: [0X00ff00, "Zona2"],
-                    pattern: p.triangulo
-
+                cuello: {
+                    type: PATTERN,
+                    masked: ["Color1"],
+                    pattern: p.cuello
                 },
                 Zona2: {
-                    type: [COLOR, COLOR],
-                    values: [0X0000ff, 0xff0000],
-                    pattern: p.lateral
-
+                    type: PATTERN,
+                    masked: ["Color3"],
+                    pattern: p.aleta
 
                 },
                 Zona3: {
-                    type: [COLOR, COLOR],
-                    values: [0xffff00, 0xff00ff],
-                    pattern: p.cuello
+                    type: PATTERN,
+                    masked: ["Color4"],
+                    pattern: p.adorno
                 },
+                Color1: {
+                    type: COLOR,
+                    name: "color1",
+                    value: "#ff0000"
+
+                },
+                Color2: {
+                    type: COLOR,
+                    name: "color2",
+                    value: "#000000"
+
+                },
+                Color3: {
+                    type: COLOR,
+                    name: "color3",
+                    value: "#00ffff"
+
+                },
+                Color4: {
+                    type: COLOR,
+                    name: "color4",
+                    value: "#0000ff"
+
+                },
+
+
             }
         },
         design2: {
             nombre: "Diseño Diagonal",
             image: "Diagonal.webp",
+            background: "#000000",
             Design: {
-                main: {
 
-                    type: [COLOR, COLOR],
-                    values: [0xff0000, 0x000000],
+
+                main: {
+                    type: PATTERN,
+                    noMasked: ["cuello"],
+                    masked: ["Color2"],
                     pattern: p.diagonal
+                },
+                cuello: {
+                    type: PATTERN,
+                    masked: ["Color1"],
+                    pattern: p.cuello
+                },
+                Color1: {
+                    type: COLOR,
+                    name: "color1",
+                    value: "#ff0000"
+
+                },
+                Color2: {
+                    type: COLOR,
+                    name: "color2",
+                    value: "#00ff00"
+
                 }
+
+
 
             }
         }
-
-
-
     }
 
 
 
-
 }
+
+
+
 
 
 

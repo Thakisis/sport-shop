@@ -8,14 +8,14 @@ export const modelList = [{
 {
     idModel: "TshirtB",
     name: "Camiseta B",
-    file: "TShirt.glb",
+    file: "TShirtB.glb",
     component: "Tshirt",
     image: "TshirtB.webp"
 },
 {
     idModel: "TshirtC",
     name: "Camiseta C",
-    file: "TShirt.glb",
+    file: "TShirtC.glb",
     component: "Tshirt",
     image: "TshirtC.webp"
 }

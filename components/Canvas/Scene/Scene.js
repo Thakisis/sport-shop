@@ -9,14 +9,10 @@ import { useStore } from "@/Store"
 
 
 export default function Scene({ children }) {
-    const setThree = useStore(state => state.Actions.setThree)
-    const threeParams = useStore(state => state.threeParams)
-    const threeReferences = useThree()
 
+    //    const { mesh, material } = useStore((state) => state.threeSelected)
 
-    const { mesh, material } = useStore((state) => state.threeSelected)
-
-    const Model = mesh ? <mesh geometry={mesh.geometry} material={material}></mesh> : <group></group>
+    //    const Model = mesh ? <mesh geometry={mesh.geometry} material={material}></mesh> : <group></group>
     return (
         <>
             <group>

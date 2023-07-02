@@ -1,58 +1,20 @@
 import { useStore } from "@/Store"
 import { ColorCard } from './ColorCard'
-export function Colors(props) {
-    const { Colors, selected: { modelId, patternId } } = useStore((state) => ({ Colors: state.threeSelected.colors, selected: state.selected }))
-    console.log(Colors, modelId, patternId)
-    const colorsRender = Object.keys((Colors)).map((zona) => <ColorCard key={zona} color={Colors[zona]} />)
-    return colorsRender
-}
+export function Colors() {
 
-/* Component
-import { useStore } from "@/Store"
+    const { selected, dataModels } = useStore(state => ({ selected: state.selected, dataModels: state.PatternData }))
 
-import { TextInput } from '@mantine/core'
-import "react-color-palette/lib/css/styles.css"
-export function ZonesArea(props) {
-    const { setNumber } = useStore((state) => state.Actions)
-
+    if (!selected.modelId || !selected.pattern) {
+        return (<div>Seleccione Modelo y Diseño</div>)
+    }
+    const { colors, images } = dataModels[selected.modelId][selected.pattern]
+    const Colors = Object.keys(colors).map((key) => <ColorCard key={key} colorId={key} {...colors[key]} {...images} ></ColorCard>)
+    console.log(colors, images)
     return (
-        <div className="flex flex-col justify-between h-full">
-            {UIZones}
-            <div>
 
+        <div>{Colors}</div>
 
-                <TextInput
-
-                    placeholder="Nombre"
-                    defaultValue="TEXT"
-                    radius="md"
-                    maxLength={11}
-                    onChange={(event) => setNumber({ name: event.currentTarget.value })}
-                />
-                <TextInput
-                    defaultValue={0}
-                    placeholder="Numero"
-                    radius="md"
-                    maxLength={2}
-                    onChange={(event) => setNumber({ number: event.currentTarget.value })}
-                />
-            </div>
-            <div>
-                <button
-                    className="bg-white hover:bg-slate-400  text-black font-bold py-2 px-4 rounded"
-                    onClick={() => {
-                        //const link = document.createElement('a')
-                        //link.setAttribute('download', 'canvas.png')
-                        //link.setAttribute('href', document.querySelector('canvas').toDataURL('image/png').replace('image/png', 'image/octet-stream'))
-                        //link.click()
-                        setNumber()
-                    }}>
-                    DOWNLOAD
-                </button>
-            </div>
-        </div>
     )
+
 }
 
-
-*/

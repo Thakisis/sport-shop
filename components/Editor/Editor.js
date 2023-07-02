@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { EditorUi } from './EditorUI'
 import { CanvasWrapper } from './CanvasWrapper'
 import { InitStore } from './InitStore'
@@ -10,7 +11,9 @@ export function Editor(props) {
                 <CanvasWrapper></CanvasWrapper>
             </EditorUi>
             <InitStore {...props} />
+
         </div>
     )
 }
+
 

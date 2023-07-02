@@ -1,8 +1,10 @@
 import create from 'zustand'
-import * as THREE from 'three'
+
 import { mountStoreDevtool } from 'simple-zustand-devtools'
-import { modelList, panelPosition } from '@/config'
-import { updateColor, createMaterial, updateNumber, loadModel, getDesign, loadImages, defaultMaterial } from '@/utils'
+import { modelList, panelPosition, patternsList, COLOR, PATTERN, Zones } from '@/config'
+import { loadModel, defaultMaterial, createMaterials, createSvg, setUniform, renderTexture, loadSVGfiles } from '@/utils'
+
+
 
 
 
@@ -13,6 +15,8 @@ export const useStore = create((set, get) => ({
     audio: false,
     selected: {},
     MaterialsProps: {},
+    Zones: {},
+    PatternData: {},
     ModelMeshes: {},
     threeSelected: { mesh: undefined, material: undefined, shader: undefined },
     numberData: { name: "text", Number: 0 },
@@ -26,18 +30,30 @@ export const useStore = create((set, get) => ({
 
         //set Model on click 
         async setModel(modelId) {
-            const ModelMeshes = get().ModelMeshes
 
+            //get all models loaded already
+            const ModelMeshes = get().ModelMeshes
             set({ selected: { modelId } })
+
+            //if model is not loaded load it
             if (!ModelMeshes[modelId]) {
 
+                //find model in the array
                 const modelFile = modelList.find(({ idModel }) => idModel === modelId).file
+                //progress function to load model but model is actually small
+                //todo add smart loading component
                 const { onProgress } = get().Actions
-                const { gl } = get().threeParams
-                const modelScene = await loadModel({ modelId, modelFile, gl, onProgress })
-                set(({ ModelMeshes }) => ({ ModelMeshes: { ...ModelMeshes, [modelId]: { mesh: modelScene, refMesh: "test" } } }))
-                set(() => ({ threeSelected: { mesh: modelScene, material: defaultMaterial } }))
 
+                //gl is needed for check draco compresion features of renderer
+                const { gl } = get().threeParams
+
+                //load model
+                const modelScene = await loadModel({ modelId, modelFile, gl, onProgress })
+                //add model to loaded
+                set(({ ModelMeshes }) => ({ ModelMeshes: { ...ModelMeshes, [modelId]: { mesh: modelScene, refMesh: "test" } } }))
+
+                //set model and default material for r3f component
+                set(() => ({ threeSelected: { mesh: modelScene, material: defaultMaterial } }))
                 return
             }
 
@@ -45,101 +61,86 @@ export const useStore = create((set, get) => ({
 
             //: { mesh: underfined, material: undefined, shader: undefined },
         },
-        setPattern(patternId) {
-            const modelId = get().selected.modelId
-            const loadTextures = get().Actions.loadTextures
-            set(({ selected }) => ({ selected: { ...selected, patternId: patternId } }))
-            const { maps, design } = getDesign(modelId, patternId)
-
-            loadTextures(maps, design)
-        },
-        async loadTextures(maps, design) {
-            const { setMaterial } = get().Actions
+        async setPattern(pattern) {
+            const PatternData = get().PatternData
             const { modelId } = get().selected
-            const prevTextures = get().textures
-            const newMaps = maps.filter(({ name }) => !prevTextures[modelId]?.[name])
-            const mapImages = await loadImages(newMaps, `/textures/${modelId}/`, modelId)
-            const addedMaps = mapImages.reduce((acum, { name, texture }) => ({ ...acum, [name]: texture }), {})
-            set(({ textures }) => ({ textures: { ...textures, [modelId]: { ...textures[modelId], ...addedMaps } } }))
 
-            setMaterial(maps, design)
-
-        },
-        setMaterial(maps, design) {
-
-            const MaterialsProps = get().MaterialsProps
-            const { modelId, patternId } = get().selected
-            let findMaterialProps = MaterialsProps[modelId]?.[patternId]
-            if (!findMaterialProps) {
-                const texturesModel = get().textures[modelId]
-                const texturesDesign = maps.reduce((acum, { name }) => ({ ...acum, [name]: texturesModel[name] }), {})
-                const materialProps = createMaterial(design, texturesDesign)
-                set(({ MaterialsProps }) => ({ MaterialsProps: { ...MaterialsProps, [modelId]: { ...MaterialsProps[modelId], [patternId]: { ...materialProps } } } }))
-
-                findMaterialProps = materialProps
+            if (PatternData[modelId] && PatternData[modelId][pattern]) {
+                set(({ threeSelected }) => ({ threeSelected: { ...threeSelected, material: PatternData[modelId][pattern].material } }))
+                return
             }
+            const materials = get().Materials
+            const design = patternsList[modelId][pattern].Design
+            //get different zones and load the files
+            const zones = Object.keys(design).filter((key) => design[key].type === PATTERN).map((key) => design[key].pattern)
+            // load only those not loaded
+            const zonesLoaded = get().Zones
+            const newZones = zones.filter(({ name }) => zonesLoaded[name] === undefined)
+            //load svg files and store in Zones
+            const newZonesLoaded = await loadSVGfiles(newZones)
+            const zonesUpdate = { ...zonesLoaded, ...newZonesLoaded }
+            set({ Zones: zonesUpdate })
+            // select those Zones used in the design
+            const zonesUsed = zones.map(({ name }) => zonesUpdate[name])
+            const { textures, colors, background } = await createSvg(patternsList[modelId][pattern], zonesUsed)
+            //select material needed for the number of textures used
+
+            const { material, uniforms, materialBasic } = materials[textures.length]
+            //get scene to retrive envmap 
+            const { scene } = get().threeParams
+            const { mesh } = get().threeSelected
+
+            // render images for zones ui using mesh the basicmaterial to get masks, textures, backgroundcolor and how many colors are
+            const images = renderTexture({ mesh, materialBasic, background, scene, textures, numColors: colors.length })
+            //store images
+            const getModelData = get().Actions.getModelData
 
 
-            set(({ threeSelected }) => ({ threeSelected: { ...threeSelected, ...findMaterialProps } }))
+            const newPatternData = getModelData({ material: material, colors, images, background, textures, modelId, pattern, uniforms })
+            const ModelData = { ...PatternData[modelId], [pattern]: { ...newPatternData } }
+            set(({ PatternData }) => ({ PatternData: { ...PatternData, [modelId]: ModelData } }))
+            set(({ threeSelected }) => ({ threeSelected: { ...threeSelected, material: material } }))
+            set(({ selected }) => ({ selected: { ...selected, pattern } }))
+
         },
+        getModelData({ material, colors, images, background, uniforms, textures }) {
 
 
 
+            setUniform({ uniform: uniforms.textures, textures: textures })
+            setUniform({ uniform: uniforms.bgColor, color: background })
+            console.log(images)
+            const colorPattern = colors.reduce((acum, zone) => {
+                const { name, defaultColor, uniform } = zone
+                setUniform({ uniform: uniforms[uniform], color: defaultColor })
+                console.log(uniform)
+                console.log(images[uniform])
+                return ({ ...acum, [uniform]: { name, defaultColor, uniform: uniforms[uniform], color: defaultColor, image: images[uniform] } })
+
+            }, { background: { name: "Color Principal", defaultColor: background, uniform: uniforms.bgColor, color: background, image: images.background } })
+            const patterndata = { textures, material, colors: { ...colorPattern }, images: { black: images.black, white: images.white } }
+            return patterndata
 
 
 
-        //call back to store shader to be able to modify the uniforms
-        setShader(shaderInfo) {
-            const { modelId, patternId } = get().selected
-            set(({ Shaders }) => ({ Shaders: { ...Shaders, [modelId]: { ...Shaders[modelId], [patternId]: shaderInfo } } }))
-            set(({ threeSelected }) => ({ threeSelected: { ...threeSelected, shader: shaderInfo } }))
         },
-
         onProgress(props) {
 
         },
-
-        // check method
-        selectModel(props) {
-
-            const modelSelected = !props ? modelList[0] : !props.model ? modelList[0] : modelList.find(({ idModel }) => idModel === props.model)
-            set({ modelSelected: { ...modelSelected } })
-            const { selectPattern } = get().Actions
-            selectPattern(0)
-        },
-        //check to merge with setModel
-        /*
-        selectPattern(props) {
-            const { idModel } = get().modelSelected
-            const { setMaterial } = get().Actions
-            const patternSelected = !props ? patternList[idModel][0] : !props.pattern ? patternList[idModel][props] : patternList[idModel].find(({ patron }) => patron === pattern)
-        
-            if (patternSelected)
-                set({ patternSelected: patternSelected })
-            setMaterial(idModel, patternSelected)
-        },
-            */
-        // change meno in press next or previous
         setMenu(menu) {
-
             const menuSelected = get().menuSelected
             const { switchPanels } = get().Actions
             set(({ menuSelected }) => ({ menuSelected: { ...menuSelected, menu: menu } }))
             switchPanels(menuSelected[`menu${menu}`])
         },
-
         //change selected drawer
         setPanel(panelSelected, menu) {
-
-
             const { switchPanels } = get().Actions
             set(({ menuSelected }) => ({ menuSelected: { ...menuSelected, [`menu${menu}`]: panelSelected } }))
             switchPanels(panelSelected)
         },
-
         //set old panel on closed and new on open
         switchPanels(panelSelected) {
-
             set(({ panelPositions }) => {
                 const newPositions = panelPositions.map(panel => panel.panel === panelSelected ? { ...panel, opened: true } : { ...panel, opened: false })
                 return { panelPositions: newPositions }
@@ -154,29 +155,11 @@ export const useStore = create((set, get) => ({
 
         //react canvas parameters needed for loader
         setThree(threeParams) {
-
+            //when canvas 3d is available create the materials
+            const materials = createMaterials()
             set({ threeParams: threeParams })
+            set({ Materials: materials })
         },
-        // create material from pattern
-        /*
-        async setMaterial(idModel, patternSelected) {
-            const Materials = get().Materials
-            const Shaders = get().Shaders
-            const { setShader } = get().Actions
-            const { idPatron } = patternSelected
-        
-            if (Materials[idPatron]) {
-        
-                set({ materialSelected: Materials[idPatron] })
-                return
-            }
-        
-            const material = await createMaterial(patternSelected, setShader)
-        
-            set(({ Materials }) => (
-                { Materials: { ...Materials, [idPatron]: { ...Materials[idPatron], material: material } }, materialSelected: material }
-            ))
-        },*/
         //change color props
         setColor(zonaUn, color) {
             const { material, shader } = get()

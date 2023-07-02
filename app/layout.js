@@ -1,6 +1,6 @@
 "use client"
 
-import './globals.css'
+import './globals.scss'
 import RootStyleRegistry from './emotion'
 import { Inter } from 'next/font/google'
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="template"
+   viewBox="0 0 4096 4096"
+   height="4096"
+   width="4096"
+   version="1.1"
+   xml:space="preserve"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+   <g id="zona">
+   <rect x="0" y="0" width="4096" height="4096" fill="black"/>
+     <path
+       style="fill:#ffffff"
+       d="m 58.294364,3850.4961 1929.850336,9.2043 3.0681,227.0412 -1945.190934,-12.2725 z"
+      />
+  </g>
+
+</svg>
