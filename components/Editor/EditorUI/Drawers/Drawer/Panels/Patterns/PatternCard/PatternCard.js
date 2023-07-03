@@ -6,7 +6,7 @@ import { mc } from '@/utils'
 import styles from './PatternCard.module.scss'
 export function PatternCard({ patternId, nombre, modelId, image }) {
 
-    const { patternId: selectedPattern } = useStore((state) => state.selected)
+    const { pattern: selectedPattern } = useStore((state) => state.selected)
     const { setPattern } = useStore((state) => state.Actions)
 
 
