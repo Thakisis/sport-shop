@@ -10,7 +10,7 @@ export function Drawers({ children }) {
     const panelsRender = panelPositions.map((props) => {
 
 
-        return (<Drawer key={props.panel} {...props} />)
+        return (<Drawer key={props.panel} {...props} className="overflow-x-visible" />)
     })
 
 

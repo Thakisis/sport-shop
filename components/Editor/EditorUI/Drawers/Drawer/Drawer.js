@@ -1,5 +1,5 @@
 "use client"
-import { Drawer as MDrawer } from '@mantine/core'
+import { Drawer as MDrawer, ScrollArea } from '@mantine/core'
 import { useStore } from '@/Store'
 import * as Panels from './Panels'
 export function Drawer({ children, panel, ...props }) {
@@ -7,13 +7,21 @@ export function Drawer({ children, panel, ...props }) {
     const Content = Panels[panel]
 
     return (
+
+
+
+
         <MDrawer
             key={panel}
             //onClose={() => closeHandler({ side, panel: name })}
             {...panelData}
             overlayProps={{ display: "none" }}
+            scrollAreaComponent={ScrollArea.Autosize}
         >
+
+
             <Content></Content>
+
         </MDrawer>
     )
 }

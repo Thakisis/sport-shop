@@ -97,8 +97,8 @@ export const useStore = create((set, get) => ({
 
 
             const newPatternData = getModelData({ material: material, colors, images, background, textures, modelId, pattern, uniforms })
-            const ModelData = { ...PatternData[modelId], [pattern]: { ...newPatternData } }
-            set(({ PatternData }) => ({ PatternData: { ...PatternData, [modelId]: ModelData } }))
+
+            set(({ PatternData }) => ({ PatternData: { ...PatternData, [`${modelId}-${pattern}`]: { ...newPatternData } } }))
             set(({ threeSelected }) => ({ threeSelected: { ...threeSelected, material: material } }))
             set(({ selected }) => ({ selected: { ...selected, pattern } }))
 
@@ -109,12 +109,11 @@ export const useStore = create((set, get) => ({
 
             setUniform({ uniform: uniforms.textures, textures: textures })
             setUniform({ uniform: uniforms.bgColor, color: background })
-            console.log(images)
+
             const colorPattern = colors.reduce((acum, zone) => {
                 const { name, defaultColor, uniform } = zone
                 setUniform({ uniform: uniforms[uniform], color: defaultColor })
-                console.log(uniform)
-                console.log(images[uniform])
+
                 return ({ ...acum, [uniform]: { name, defaultColor, uniform: uniforms[uniform], color: defaultColor, image: images[uniform] } })
 
             }, { background: { name: "Color Principal", defaultColor: background, uniform: uniforms.bgColor, color: background, image: images.background } })
@@ -161,12 +160,17 @@ export const useStore = create((set, get) => ({
             set({ Materials: materials })
         },
         //change color props
-        setColor(zonaUn, color) {
-            const { material, shader } = get()
-            if (!material)
-                return
-            set(({ itemList }) => ({ ...itemList, Zonas: itemList.Zonas.map((zona) => zona.un !== zonaUn ? zona : { ...zona, newValue: color }) }))
-            updateColor(material, shader, zonaUn, color)
+        setColor(colorId, newColor, uniform) {
+
+            const { modelId, pattern } = get().selected
+            const selData = `${modelId}-${pattern}`
+            const data = get().PatternData[selData]
+            const { colors } = data
+            const newColors = { ...colors, [colorId]: { ...colors[colorId], color: newColor.hex } }
+            set(({ PatternData }) => ({ PatternData: { ...PatternData, [selData]: { ...data, colors: { ...newColors } } } }))
+            const altdata = get().PatternData
+            setUniform({ uniform, color: newColor.hex })
+
         },
 
 

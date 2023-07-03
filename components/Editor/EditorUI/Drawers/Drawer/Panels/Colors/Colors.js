@@ -7,7 +7,7 @@ export function Colors() {
     if (!selected.modelId || !selected.pattern) {
         return (<div>Seleccione Modelo y Diseño</div>)
     }
-    const { colors, images } = dataModels[selected.modelId][selected.pattern]
+    const { colors, images } = dataModels[`${selected.modelId}-${selected.pattern}`]
     const Colors = Object.keys(colors).map((key) => <ColorCard key={key} colorId={key} {...colors[key]} {...images} ></ColorCard>)
     console.log(colors, images)
     return (
